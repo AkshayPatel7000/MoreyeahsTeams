@@ -39,6 +39,8 @@ export const GetUserChats = (docId = "kvigcDM2v4fLQVD1lTXm") => {
           var allmesages = documentSnapshot.docs.map((item) => ({
             ...item.data(),
             id: item.id,
+            timestamp: new Date(item.data().timestamp).toLocaleTimeString(),
+            date: new Date(item.data().date).toLocaleDateString(),
             isOpponent: profile?.id === item.data()?.reciverId ? true : false,
           }));
           MarkAsRead(docId, allmesages);
@@ -56,10 +58,10 @@ export const GetUserChats = (docId = "kvigcDM2v4fLQVD1lTXm") => {
 };
 export const messageSend = ({ reciverId, message }) => {
   const { profile } = Auth_Store.userCred;
-
+  console.log("---->", firebase.firestore.Timestamp.now(new Date()).seconds * 1000);
   var docId = profile.id > reciverId ? reciverId + "-" + profile.id : profile.id + "-" + reciverId;
-  var today = new Date().toLocaleDateString();
-  var time = new Date(firebase.firestore.Timestamp.now().seconds * 1000).toLocaleTimeString();
+  var today = new Date(firebase.firestore.Timestamp.now().toDate()).toISOString();
+  var time = firebase.firestore.Timestamp.now(new Date()).seconds * 1000;
 
   const body = {
     body: message,
