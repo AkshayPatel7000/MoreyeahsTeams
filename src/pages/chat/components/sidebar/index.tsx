@@ -21,6 +21,7 @@ import {
 import { Auth_Store } from "store/auth.store";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import { handleSelectUser } from "services/Firebase/User.service";
 
 function Sidebar() {
   const theme = useAppTheme();
@@ -32,6 +33,7 @@ function Sidebar() {
   };
 
   const handleChangeChat = (chat: Inbox) => {
+    handleSelectUser(chat);
     chatCtx.onChangeChat(chat);
     navigate("/" + chat.id);
   };

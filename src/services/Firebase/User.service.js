@@ -1,5 +1,5 @@
 import { Auth_Store } from "store/auth.store";
-import { Users, Chat } from "./Collection";
+import { Users, Chat, UsersChat } from "./Collection";
 import { firestore } from "./config";
 import firebase from "firebase/compat/app";
 export const GetAllUsers = async () => {
@@ -118,4 +118,58 @@ export const arrayspliter = (msgData) => {
   console.log(sortedData);
 
   return sortedData;
+};
+
+export const handleSelectUser = async (user) => {
+  const { profile } = Auth_Store.userCred;
+
+  //check whether the group(chats in firestore) exists, if not create
+  const combinedId = profile.id > user.id ? profile.id + user.id : user.id + profile.id;
+
+  try {
+    const res = await Chat.doc(combinedId).get();
+    console.log("🚀 ~ file: User.service.js:131 ~ handleSelectUser ~ res:", res, combinedId);
+    // const res = await getDoc(doc(db, "chats", combinedId));
+
+    if (!res.exists) {
+      //create a chat in chats collection
+      await Chat.doc(combinedId).collection("messages").get();
+      // await setDoc(doc(db, "chats", combinedId), { messages: [] });
+      await UsersChat.doc(profile.id).update({
+        [combinedId + ".userInfo"]: {
+          uid: user.id,
+          displayName: user.name,
+          photoURL: user.image,
+        },
+        [combinedId + ".date"]: firebase.firestore.Timestamp.now().seconds,
+      });
+      //create user chats
+      // await updateDoc(doc(db, "userChats", currentUser.uid), {
+      //   [combinedId + ".userInfo"]: {
+      //     uid: user.uid,
+      //     displayName: user.displayName,
+      //     photoURL: user.photoURL,
+      //   },
+      //   [combinedId + ".date"]: serverTimestamp(),
+      // });
+      await UsersChat.doc(user.id).update({
+        [combinedId + ".userInfo"]: {
+          uid: user.id,
+          displayName: user.name,
+          photoURL: user.image,
+        },
+        [combinedId + ".date"]: firebase.firestore.Timestamp.now().seconds,
+      });
+      // await updateDoc(doc(db, "userChats", user.uid), {
+      //   [combinedId + ".userInfo"]: {
+      //     uid: profile.id,
+      //     displayName: profile.name,
+      //     photoURL: profile.image,
+      //   },
+      //   [combinedId + ".date"]: serverTimestamp(),
+      // });
+    }
+  } catch (err) {
+    console.log("🚀 ~ file: User.service.js:171 ~ handleSelect ~ err:", err);
+  }
 };

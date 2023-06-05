@@ -8,7 +8,7 @@ import "./loginCss.js";
 import { StyledButton, Container, ImgField, Content, Button, ImgContainer } from "./loginCss.js";
 import Maskgroup from "../../assets/img3.png";
 import Microsoft from "../../assets/microsoft.png";
-import { Users } from "services/Firebase/Collection";
+import { Users, UsersChat } from "services/Firebase/Collection";
 import { GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 import { auth, provider } from "services/Firebase/config";
 import { GetAllUsers } from "services/Firebase/User.service";
@@ -37,6 +37,8 @@ function Signup() {
               image,
             },
           };
+          await UsersChat.doc(res.uniqueId).set({});
+          // await setDoc(doc(db, "userChats", res.user.uid), {});
 
           Auth_Store.setUserCred(profile);
           Auth_Store.setIsLoggedIn(true);
@@ -77,6 +79,7 @@ function Signup() {
                 image: user.photoURL,
               },
             };
+            await UsersChat.doc(user.uid).set({});
             console.log("🚀 ~ file: Signup.js:27 ~ .then ~ resp:", profile);
             Auth_Store.setUserCred(profile);
             Auth_Store.setIsLoggedIn(true);

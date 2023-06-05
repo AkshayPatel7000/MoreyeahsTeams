@@ -4,6 +4,7 @@ class AuthStore {
   userCred = {};
   isLoggedIn = false;
   allusers = [];
+  searchUsers = [];
   userMessages = [];
   constructor() {
     makeAutoObservable(this);
@@ -16,6 +17,7 @@ class AuthStore {
   }
   setAllUsers(value) {
     this.allusers = value;
+    this.searchUsers = value;
   }
   setUserMessages = (value) => {
     this.userMessages = value;
@@ -24,7 +26,7 @@ class AuthStore {
     this.userCred = {};
     this.isLoggedIn = false;
     this.allusers = [];
-
+    this.searchUsers = [];
     this.userMessages = [];
   }
 }
