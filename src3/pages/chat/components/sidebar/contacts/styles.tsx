@@ -7,9 +7,7 @@ export const Contact = styled.div<{ isActive?: boolean }>`
   display: flex;
   align-items: center;
   border-bottom: 1px solid ${(props) => props.theme.common.primaryColor};
-
   cursor: pointer;
-
   ${(props) =>
     props.isActive &&
     css`

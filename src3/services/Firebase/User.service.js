@@ -160,18 +160,16 @@ export const handleSelectUser = async (user) => {
 export const getMyChats = async () => {
   try {
     const { profile } = Auth_Store.userCred;
-    var myChatUsers = UsersChat.doc(profile.id).onSnapshot((documentSnapshot) => {
-      if (!documentSnapshot?.empty) {
-        console.log("🚀 ~ file: User.service.js:165 ~ myChatUsers ~ m:", documentSnapshot.data());
-        var finalUsersChat = Object.entries(documentSnapshot.data())
-          ?.sort((a, b) => b[1].date - a[1].date)
-          .map((chat) => {
-            return chat;
-          });
-        Auth_Store.setUserChatHistory(finalUsersChat);
-        // console.log(finalUsersChat);
-      }
-    });
+    var myChatUsers = await UsersChat.doc(profile.id).get();
+    if (myChatUsers.exists) {
+      var finalUsersChat = Object.entries(myChatUsers.data())
+        ?.sort((a, b) => b[1].date - a[1].date)
+        .map((chat) => {
+          return chat;
+        });
+      Auth_Store.setUserChatHistory(finalUsersChat);
+      console.log(finalUsersChat);
+    }
   } catch (error) {
     console.log("🚀 ~ file: User.service.js:164 ~ getMyChats ~ error:", error);
   }

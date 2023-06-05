@@ -67,14 +67,3 @@ export const Input = styled.input`
     outline: none;
   }
 `;
-export const SearchBox = styled.div`
-  background: ${(props) => props.theme.common.primaryColor};
-  position: absolute;
-  padding-block: 1rem;
-  padding-inline: 10px;
-  left: 0;
-  top: 100%;
-  width: 98.5%;
-  border-end-start-radius: 10px;
-  border-end-end-radius: 10px;
-`;

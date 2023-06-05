@@ -17,17 +17,16 @@ function App() {
   }, []);
   const init = async () => {
     var userCred = await localStorage.getItem("userCred");
-    let subscriber = "";
+
     if (userCred) {
       Auth_Store.setUserCred(JSON.parse(userCred));
       Auth_Store.setIsLoggedIn(true);
       await GetAllUsers();
-      subscriber = await getMyChats();
+      await getMyChats();
     } else {
       Auth_Store.setUserCred({});
       Auth_Store.setIsLoggedIn(false);
     }
-    return () => subscriber();
   };
   if (!isLoaded) return <SplashPage progress={progress} />;
   return (
