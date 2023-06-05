@@ -26,22 +26,23 @@ export default function SearchField(props: SearchFieldProps) {
   };
 
   // useEffect(() => {
-  //   const closeOpenMenus = (e)=>{
-  //     if(inputRef.current && openSearchBox && !inputRef.current.contains(e.target)){
-  //       setOpenSearchBox(false)
-  //       Auth_Store.setSearchUser([])
+  //   const closeOpenMenus = (e) => {
+  //     if (inputRef.current && openSearchBox && !inputRef.current.contains(e.target)) {
+  //       setOpenSearchBox(false);
+  //       Auth_Store.setSearchUser([]);
   //     }
-  // }
+  //   };
   //   document.addEventListener("mousedown", closeOpenMenus);
   //   return () => {
   //     document.removeEventListener("mousedown", closeOpenMenus);
   //   };
-  // }, [openSearchBox])
+  // }, [openSearchBox]);
   const handleChangeChat = (chat: any) => {
-    console.log("chat=>>>>>>>>>>.", chat);
+    setSearch("");
     handleSelectUser(chat);
     chatCtx.onChangeChat(chat);
     setOpenSearchBox(false);
+
     navigate("/" + chat.id);
   };
 
@@ -63,6 +64,7 @@ export default function SearchField(props: SearchFieldProps) {
         onKeyDown={(e) => {
           e.keyCode === 13 && onSearch();
         }}
+        value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
       {openSearchBox && (

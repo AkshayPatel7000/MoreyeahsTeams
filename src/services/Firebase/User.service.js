@@ -178,9 +178,14 @@ export const getMyChats = async () => {
 };
 export const SearchUser = async (query) => {
   try {
-    const record = toJS(Auth_Store.allusers);
-    var serchData = searchByFields(record, query, ["name"]);
-    Auth_Store.setSearchUser(serchData);
+    if (query?.trim() !== "") {
+      const record = toJS(Auth_Store.allusers);
+      var serchData = searchByFields(record, query, ["name"]);
+      Auth_Store.setSearchUser(serchData);
+    } else {
+      Auth_Store.setSearchUser(Auth_Store.allusers);
+    }
+
     console.log("🚀 ~ file: User.service.js:181 ~ SearchUser ~ serchData:", toJS(serchData));
   } catch (error) {
     console.log("🚀 ~ file: User.service.js:181 ~ SearchUser ~ error:", error);
