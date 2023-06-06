@@ -115,21 +115,18 @@ export const arrayspliter = (msgData) => {
     sortedData[key] = subArrays[key];
   });
 
-  console.log(sortedData);
-
   return sortedData;
 };
 
 export const handleSelectUser = async (user) => {
   const { profile } = Auth_Store.userCred;
-
+  var combinedId = profile.id > user.id ? user.id + "-" + profile.id : profile.id + "-" + user.id;
   //check whether the group(chats in firestore) exists, if not create
-  const combinedId = profile.id > user.id ? profile.id + "-" + user.id : user.id + "-" + profile.id;
 
   try {
-    const res = await Chat.doc(combinedId).get();
-    console.log("user->>", res.exists);
-    if (!res.exists) {
+    const res = await Chat.doc(combinedId).collection("messages").orderBy("timestamp", "asc").get();
+    console.log("user->>", res.docs);
+    if (res.empty) {
       await Chat.doc(combinedId).collection("messages").get();
 
       await UsersChat.doc(profile.id).update({
@@ -160,9 +157,9 @@ export const handleSelectUser = async (user) => {
 export const getMyChats = async () => {
   try {
     const { profile } = Auth_Store.userCred;
-    var myChatUsers = UsersChat.doc(profile.id).onSnapshot((documentSnapshot) => {
+    UsersChat.doc(profile.id).onSnapshot((documentSnapshot) => {
       if (!documentSnapshot?.empty) {
-        console.log("🚀 ~ file: User.service.js:165 ~ myChatUsers ~ m:", documentSnapshot.data());
+        // console.log("🚀 ~ file: User.service.js:165 ~ myChatUsers ~ m:", documentSnapshot.data());
         var finalUsersChat = Object.entries(documentSnapshot.data())
           ?.sort((a, b) => b[1].date - a[1].date)
           .map((chat) => {
