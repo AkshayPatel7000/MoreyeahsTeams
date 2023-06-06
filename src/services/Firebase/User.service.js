@@ -39,7 +39,10 @@ export const GetUserChats = (docId = "kvigcDM2v4fLQVD1lTXm") => {
           var allmesages = documentSnapshot.docs.map((item) => ({
             ...item.data(),
             id: item.id,
-            timestamp: new Date(item.data().timestamp).toLocaleTimeString(),
+            timestamp: new Date(item.data().timestamp).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
             date: new Date(item.data().date).toLocaleDateString(),
             isOpponent: profile?.id === item.data()?.reciverId ? true : false,
           }));
@@ -73,6 +76,7 @@ export const messageSend = ({ reciverId, message }) => {
     isOpponent: true,
   };
   Chat.doc(docId).collection("messages").doc().set(body);
+  setLastMassage(docId, body);
 };
 
 export const MarkAsRead = (docId, allmesages) => {
@@ -124,10 +128,10 @@ export const handleSelectUser = async (user) => {
   //check whether the group(chats in firestore) exists, if not create
 
   try {
-    const res = await Chat.doc(combinedId).collection("messages").orderBy("timestamp", "asc").get();
-    console.log("user->>", res.docs);
+    const res = await Chat.doc(combinedId).collection("messages").get();
+    console.log("user->>", res);
     if (res.empty) {
-      await Chat.doc(combinedId).collection("messages").doc().set();
+      await Chat.doc(combinedId).collection("messages").doc().set({});
 
       await UsersChat.doc(profile.id).update({
         [combinedId + ".userInfo"]: {
@@ -170,7 +174,7 @@ export const getMyChats = async () => {
                 userInfo: {
                   ...chat[1].userInfo,
                   timestamp: new Date(chat[1].date).toLocaleDateString(),
-                  lastMessage: "hello",
+                  lastMessage: chat[1].lastMessage,
                 },
               },
             ];
@@ -208,4 +212,22 @@ export const searchByFields = (arr, input, keyArr) => {
     return Object.values(p).join(" ").match(new RegExp(input, "i"));
   });
   return results;
+};
+export const setLastMassage = async (combinedId, body) => {
+  try {
+    console.log({
+      [combinedId + ".lastMessage"]: body?.body,
+      [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
+    });
+    await UsersChat.doc(body?.reciverId).update({
+      [combinedId + ".lastMessage"]: body?.body,
+      [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
+    });
+    await UsersChat.doc(body?.senderId).update({
+      [combinedId + ".lastMessage"]: body?.body,
+      [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
+    });
+  } catch (error) {
+    console.log("🚀 ~ file: User.service.js:217 ~ setLastMassage ~ error:", error);
+  }
 };
