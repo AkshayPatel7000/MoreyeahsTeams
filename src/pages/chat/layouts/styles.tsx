@@ -24,12 +24,12 @@ export const App = styled.div`
 export const Message = styled.p`
   display: none;
 
-  @media screen and (max-width: 500px) {
-    padding-top: 200px;
-    text-align: center;
-    font-size: 1.2rem;
-    display: block;
-  }
+  // @media screen and (max-width: 500px) {
+  //   padding-top: 200px;
+  //   text-align: center;
+  //   font-size: 1.2rem;
+  //   display: block;
+  // }
 `;
 
 export const Content = styled.div`
@@ -43,9 +43,9 @@ export const Content = styled.div`
   display: flex;
   overflow: hidden;
 
-  @media screen and (max-width: 500px) {
-    display: none;
-  }
+  // @media screen and (max-width: 500px) {
+  //   display: none;
+  // }
 
   @media screen and (min-width: 1450px) {
     height: calc(100vh - 40px);

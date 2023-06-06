@@ -7,7 +7,9 @@ import { observer } from "mobx-react-lite";
 import { Auth_Store } from "store/auth.store";
 const ChatPage = React.lazy(() => import("pages/chat/chat-room-page"));
 const UnSelectedChatPage = React.lazy(() => import("pages/chat/unselected-page"));
+const SideBar = React.lazy(() => import("pages/chat/components/sidebar"));
 const Signup = React.lazy(() => import("pages/signup/Signup"));
+var isMobile = window.innerWidth;
 const AuthEelement = ({ children }) => {
   return <>{children}</>;
 };
@@ -32,11 +34,7 @@ const App_router = createBrowserRouter([
   },
   {
     path: "/",
-    element: (
-      <AuthEelement>
-        <UnSelectedChatPage />
-      </AuthEelement>
-    ),
+    element: <AuthEelement>{isMobile > 500 ? <UnSelectedChatPage /> : <SideBar />}</AuthEelement>,
   },
 ]);
 function AppRoutes() {

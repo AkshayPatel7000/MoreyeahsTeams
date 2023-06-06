@@ -29,7 +29,7 @@ function App() {
     }
     return () => subscriber();
   };
-  if (!isLoaded) return <SplashPage progress={progress} />;
+  // if (!isLoaded) return <SplashPage progress={progress} />;
   return (
     <MsalInerceptor>
       <MsalProvider instance={msalInstance}>
