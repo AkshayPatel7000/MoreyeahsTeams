@@ -215,10 +215,6 @@ export const searchByFields = (arr, input, keyArr) => {
 };
 export const setLastMassage = async (combinedId, body) => {
   try {
-    console.log({
-      [combinedId + ".lastMessage"]: body?.body,
-      [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
-    });
     await UsersChat.doc(body?.reciverId).update({
       [combinedId + ".lastMessage"]: body?.body,
       [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
