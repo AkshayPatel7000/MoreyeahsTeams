@@ -127,7 +127,7 @@ export const handleSelectUser = async (user) => {
     const res = await Chat.doc(combinedId).collection("messages").orderBy("timestamp", "asc").get();
     console.log("user->>", res.docs);
     if (res.empty) {
-      await Chat.doc(combinedId).collection("messages").get();
+      await Chat.doc(combinedId).collection("messages").doc().set();
 
       await UsersChat.doc(profile.id).update({
         [combinedId + ".userInfo"]: {
@@ -136,7 +136,7 @@ export const handleSelectUser = async (user) => {
           image: user.image,
           email: user.email,
         },
-        [combinedId + ".date"]: firebase.firestore.Timestamp.now().seconds,
+        [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
       });
 
       await UsersChat.doc(user.id).update({
@@ -146,7 +146,7 @@ export const handleSelectUser = async (user) => {
           image: profile.image,
           email: profile.email,
         },
-        [combinedId + ".date"]: firebase.firestore.Timestamp.now().seconds,
+        [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
       });
     } else console.log("Not exisit");
   } catch (err) {
@@ -159,14 +159,24 @@ export const getMyChats = async () => {
     const { profile } = Auth_Store.userCred;
     UsersChat.doc(profile.id).onSnapshot((documentSnapshot) => {
       if (!documentSnapshot?.empty) {
-        // console.log("🚀 ~ file: User.service.js:165 ~ myChatUsers ~ m:", documentSnapshot.data());
+        console.log("🚀 ~ file: User.service.js:165 ~ myChatUsers ~ m:", documentSnapshot.data());
         var finalUsersChat = Object.entries(documentSnapshot.data())
           ?.sort((a, b) => b[1].date - a[1].date)
           .map((chat) => {
-            return chat;
+            return [
+              chat[0],
+              {
+                ...chat[1],
+                userInfo: {
+                  ...chat[1].userInfo,
+                  timestamp: new Date(chat[1].date).toLocaleDateString(),
+                  lastMessage: "hello",
+                },
+              },
+            ];
           });
         Auth_Store.setUserChatHistory(finalUsersChat);
-        // console.log(finalUsersChat);
+        console.log(finalUsersChat);
       }
     });
   } catch (error) {
