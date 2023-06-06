@@ -31,8 +31,9 @@ function Sidebar() {
   const handleChangeThemeMode = () => {
     theme.onChangeThemeMode();
   };
+  //vercel.com/akshaypatel7000/moreyeahs-teams/logs
 
-  const handleChangeChat = (chat: Inbox) => {
+  https: const handleChangeChat = (chat: Inbox) => {
     handleSelectUser(chat);
     chatCtx.onChangeChat(chat);
     navigate("/" + chat.id);
