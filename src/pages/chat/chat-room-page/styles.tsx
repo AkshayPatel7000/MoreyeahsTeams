@@ -13,6 +13,9 @@ export const Body = styled.div`
   flex-direction: column;
   position: relative;
   z-index: 1;
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
 `;
 
 export const Background = styled.div`

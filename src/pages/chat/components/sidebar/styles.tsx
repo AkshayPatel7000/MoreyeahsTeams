@@ -22,7 +22,14 @@ export const SidebarContainer = styled.aside`
       flex: 70%;
     }
   }
-
+  @media screen and (max-width: 500px) {
+    width: 100% !important;
+  }
+  @media screen and (min-width: 1000px) and (max-width: 500px) {
+    & ~ div {
+      width: 100% !important;
+    }
+  }
   .icon {
     color: ${(props) => props.theme.common.headerIconColor};
   }
