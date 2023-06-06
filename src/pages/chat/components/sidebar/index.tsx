@@ -33,7 +33,7 @@ function Sidebar() {
   };
   //vercel.com/akshaypatel7000/moreyeahs-teams/logs
 
-  https: const handleChangeChat = (chat: Inbox) => {
+  const handleChangeChat = (chat: Inbox) => {
     handleSelectUser(chat);
     chatCtx.onChangeChat(chat);
     navigate("/" + chat.id);
