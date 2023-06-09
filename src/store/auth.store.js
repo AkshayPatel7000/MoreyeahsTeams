@@ -7,7 +7,7 @@ class AuthStore {
   searchUsers = [];
   userMessages = [];
   userChatHistory = [];
-
+  url = "";
   constructor() {
     makeAutoObservable(this);
   }
@@ -28,6 +28,9 @@ class AuthStore {
   }
   setUserMessages = (value) => {
     this.userMessages = value;
+  };
+  setUrl = (value) => {
+    this.url = value;
   };
   logout() {
     this.userCred = {};

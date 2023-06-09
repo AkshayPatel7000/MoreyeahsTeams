@@ -12,6 +12,9 @@ import { Container, Body, Background, FooterContainer, ScrollButton } from "./st
 import { Auth_Store } from "store/auth.store";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { Users } from "services/Firebase/Collection";
 
 function ChatRoomPage() {
   const {
@@ -26,8 +29,52 @@ function ChatRoomPage() {
     setShouldScrollToBottom,
     shouldScrollToBottom,
   } = useChatRoom();
+  const [isOnline, setisOnline] = useState(false);
   useNavigateToChat(activeInbox);
-
+  const { profile } = Auth_Store.userCred;
+  var socket = null;
+  socket = io(Auth_Store.url);
+  const socketConnection = () => {
+    socket.on("connect", () => {
+      console.log("successfully connected with socket io server");
+      console.log(socket.id);
+    });
+  };
+  let sub = null;
+  useEffect(() => {
+    sub = isUserOnline();
+    socketConnection();
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("blur", onBlur);
+    // Calls onFocus when the window first loads
+    window.addEventListener("beforeunload", onBlur);
+    // Specify how to clean up after this effect:
+    return () => {
+      sub();
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("beforeunload", onBlur);
+    };
+  }, []);
+  const onFocus = () => {
+    console.log(profile?.id, "profile?.id");
+    socket.emit("online", profile?.id);
+  };
+  const onBlur = () => {
+    socket.emit("offline", profile?.id);
+  };
+  const isUserOnline = () => {
+    try {
+      Users?.doc(activeInbox.id).onSnapshot((snap) => {
+        //snap.data()
+        setisOnline(snap?.data()?.isOnline);
+        console.log("🚀 ~ file: index.tsx:67 ~ Users.doc ~ snap.data():", snap.data());
+      });
+    } catch (error) {
+      setisOnline(false);
+      console.log("🚀 ~ file: index.tsx:66 ~ isUserOnline ~ error:", error);
+    }
+  };
   return (
     <ChatLayout>
       <Container>
@@ -36,7 +83,7 @@ function ChatRoomPage() {
           <Header
             title={activeInbox?.name ?? ""}
             image={activeInbox?.image ?? ""}
-            subTitle={activeInbox?.isOnline ? "Online" : ""}
+            subTitle={isOnline ? "Online" : "Offline"}
             onSearchClick={() => handleMenuOpen("search")}
             onProfileClick={() => handleMenuOpen("profile")}
           />

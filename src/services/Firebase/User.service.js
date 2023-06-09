@@ -161,6 +161,7 @@ export const handleSelectUser = async (user) => {
 export const getMyChats = async () => {
   try {
     const { profile } = Auth_Store.userCred;
+    console.log("🚀 ~ file: User.service.js:164 ~ getMyChats ~ profile:", profile.id);
     UsersChat.doc(profile.id).onSnapshot((documentSnapshot) => {
       if (!documentSnapshot?.empty) {
         console.log("🚀 ~ file: User.service.js:165 ~ myChatUsers ~ m:", documentSnapshot.data());
@@ -180,6 +181,10 @@ export const getMyChats = async () => {
             ];
           });
         Auth_Store.setUserChatHistory(finalUsersChat);
+        console.log(
+          "🚀 ~ file: User.service.js:184 ~ UsersChat.doc ~ finalUsersChat:",
+          finalUsersChat
+        );
         console.log(finalUsersChat);
       }
     });
@@ -216,12 +221,12 @@ export const searchByFields = (arr, input, keyArr) => {
 export const setLastMassage = async (combinedId, body) => {
   try {
     await UsersChat.doc(body?.reciverId).update({
-      [combinedId + ".lastMessage"]: body?.body,
-      [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
+      [`${combinedId}.lastMessage`]: body?.body,
+      [`${combinedId}.date`]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
     });
     await UsersChat.doc(body?.senderId).update({
-      [combinedId + ".lastMessage"]: body?.body,
-      [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
+      [`${combinedId}.lastMessage`]: body?.body,
+      [`${combinedId}.date`]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
     });
   } catch (error) {
     console.log("🚀 ~ file: User.service.js:217 ~ setLastMassage ~ error:", error);

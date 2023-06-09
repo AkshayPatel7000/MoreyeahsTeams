@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const App = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: 100vmin;
   background: ${(props) => props.theme.layout.bg};
   position: relative;
 

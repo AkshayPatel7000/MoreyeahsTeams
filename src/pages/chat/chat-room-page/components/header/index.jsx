@@ -12,17 +12,7 @@ import {
   Subtitle,
 } from "./styles";
 
-type HeaderProps = {
-  onSearchClick: Function;
-  onProfileClick: Function;
-  title: string;
-  image: string;
-  subTitle: string;
-};
-
-export default function Header(props: HeaderProps) {
-  const { title, subTitle, image, onProfileClick, onSearchClick } = props;
-
+export default function Header({ title, subTitle, image, onProfileClick, onSearchClick }) {
   return (
     <Container>
       <AvatarWrapper>
