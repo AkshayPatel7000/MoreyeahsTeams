@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 export const Container = styled.aside<{ readonly isOpen: boolean }>`
   width: 0;
   min-width: 0;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   transition: all 0.1s ease;
@@ -20,7 +21,7 @@ export const Container = styled.aside<{ readonly isOpen: boolean }>`
     position: absolute;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100dvh;
     z-index: 10;
   }
 `;

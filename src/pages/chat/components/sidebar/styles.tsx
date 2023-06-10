@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const SidebarContainer = styled.aside`
   min-width: 300px;
   flex: 40%;
+  height: 100dvh;
   border-right: 1px solid ${(props) => props.theme.common.borderColor};
   display: flex;
   flex-direction: column;
