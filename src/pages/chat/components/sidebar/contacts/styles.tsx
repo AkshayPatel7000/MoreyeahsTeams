@@ -119,6 +119,9 @@ export const MessageStatusIcon = styled(Icon)<{ isRead?: boolean }>`
 
 export const Subtitle = styled.span`
   margin-left: 3px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
 `;
 
 export const UnreadContact = styled.span`

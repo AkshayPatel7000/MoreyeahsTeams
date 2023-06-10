@@ -40,17 +40,15 @@ function ChatRoomPage() {
       console.log(socket.id);
     });
   };
-  let sub = null;
+
   useEffect(() => {
-    sub = isUserOnline();
+    const unsubscribe = isUserOnline();
     socketConnection();
     window.addEventListener("focus", onFocus);
     window.addEventListener("blur", onBlur);
-    // Calls onFocus when the window first loads
     window.addEventListener("beforeunload", onBlur);
-    // Specify how to clean up after this effect:
     return () => {
-      sub();
+      unsubscribe();
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("beforeunload", onBlur);
@@ -65,10 +63,11 @@ function ChatRoomPage() {
   };
   const isUserOnline = () => {
     try {
-      Users?.doc(activeInbox.id).onSnapshot((snap) => {
+      return Users?.doc(activeInbox.id).onSnapshot((snap) => {
         //snap.data()
         setisOnline(snap?.data()?.isOnline);
         console.log("🚀 ~ file: index.tsx:67 ~ Users.doc ~ snap.data():", snap.data());
+        return snap;
       });
     } catch (error) {
       setisOnline(false);

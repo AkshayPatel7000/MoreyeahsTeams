@@ -129,7 +129,7 @@ export const handleSelectUser = async (user) => {
 
   try {
     const res = await Chat.doc(combinedId).collection("messages").get();
-    console.log("user->>", res);
+
     if (res.empty) {
       await Chat.doc(combinedId).collection("messages").doc().set({});
 
@@ -152,12 +152,48 @@ export const handleSelectUser = async (user) => {
         },
         [combinedId + ".date"]: new Date(firebase.firestore.Timestamp.now().toDate()).toISOString(),
       });
-    } else console.log("Not exisit");
+    } else {
+      console.log("Chat is there....");
+    }
   } catch (err) {
     console.log("🚀 ~ file: User.service.js:171 ~ handleSelect ~ err:", err);
   }
 };
+export const getChatUsersList = async () => {
+  try {
+    const { profile } = Auth_Store.userCred;
+    var documentSnapshot = await UsersChat.doc(profile.id).get();
+    if (documentSnapshot?.exists) {
+      console.log(
+        "🚀 ~ file: User.service.js:165 ~ getChatUsersList ~ documentSnapshot:",
+        documentSnapshot.data()
+      );
 
+      var finalUsersChat = Object.entries(documentSnapshot.data())
+        ?.sort((a, b) => b[1].date - a[1].date)
+        .map((chat) => {
+          return [
+            chat[0],
+            {
+              ...chat[1],
+              userInfo: {
+                ...chat[1].userInfo,
+                timestamp: new Date(chat[1].date).toLocaleDateString(),
+                lastMessage: chat[1].lastMessage,
+              },
+            },
+          ];
+        });
+      Auth_Store.setUserChatHistory(finalUsersChat);
+      console.log(
+        "🚀 ~ file: User.service.js:184 ~ UsersChat.doc ~ finalUsersChat:",
+        finalUsersChat
+      );
+    }
+  } catch (error) {
+    console.log("🚀 ~ file: User.service.js:164 ~ getChatUsersList ~ error:", error);
+  }
+};
 export const getMyChats = async () => {
   try {
     const { profile } = Auth_Store.userCred;
@@ -185,7 +221,6 @@ export const getMyChats = async () => {
           "🚀 ~ file: User.service.js:184 ~ UsersChat.doc ~ finalUsersChat:",
           finalUsersChat
         );
-        console.log(finalUsersChat);
       }
     });
   } catch (error) {

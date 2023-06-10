@@ -11,7 +11,7 @@ import Microsoft from "../../assets/microsoft.png";
 import { Users, UsersChat } from "services/Firebase/Collection";
 import { GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 import { auth, provider } from "services/Firebase/config";
-import { GetAllUsers } from "services/Firebase/User.service";
+import { GetAllUsers, getChatUsersList } from "services/Firebase/User.service";
 function Signup() {
   const params = useParams();
   const { instance, accounts } = useMsal();
@@ -37,13 +37,18 @@ function Signup() {
               image,
             },
           };
-          await UsersChat.doc(res.uniqueId).set({});
+          const cUser = await UsersChat.doc(res.uniqueId).get();
+          if (!cUser.exists) {
+            UsersChat.doc(res.uniqueId).set({});
+          }
           // await setDoc(doc(db, "userChats", res.user.uid), {});
 
           Auth_Store.setUserCred(profile);
           Auth_Store.setIsLoggedIn(true);
           localStorage.setItem("userCred", JSON.stringify(profile));
           await GetAllUsers();
+          await getChatUsersList();
+
           navigate("/");
         })
         .catch((err) => {
@@ -79,12 +84,17 @@ function Signup() {
                 image: user.photoURL,
               },
             };
-            await UsersChat.doc(user.uid).set({});
+            const cUser = await UsersChat.doc(user.uid).get();
+            if (!cUser.exists) {
+              UsersChat.doc(user.uid).set({});
+            }
+            // await UsersChat.doc(user.uid).set({ login: true });
             console.log("🚀 ~ file: Signup.js:27 ~ .then ~ resp:", profile);
             Auth_Store.setUserCred(profile);
             Auth_Store.setIsLoggedIn(true);
             localStorage.setItem("userCred", JSON.stringify(profile));
             await GetAllUsers();
+            await getChatUsersList();
             navigate("/");
           })
           .catch((err) => {
