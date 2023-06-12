@@ -4,6 +4,9 @@ export const Container = styled.div`
   display: flex;
   position: relative;
   height: 100dvh;
+  @media screen and (min-width: 1450px) {
+    height: 100%;
+  }
 `;
 
 export const Body = styled.div`

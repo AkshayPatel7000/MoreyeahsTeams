@@ -18,10 +18,12 @@ export const SidebarContainer = styled.aside`
 
   @media screen and (min-width: 1301px) {
     flex: 30%;
-
     & ~ div {
       flex: 70%;
     }
+  }
+  @media screen and (min-width: 1450px) {
+    height: 100%;
   }
 
   .icon {
