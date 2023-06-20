@@ -1,8 +1,7 @@
-import React from "react";
-import "./loginCss.js";
-import { StyledButton, Container, ImgField, Content, Button, ImgContainer } from "./loginCss.js";
 import Maskgroup from "../../assets/img3.png";
 import Microsoft from "../../assets/microsoft.png";
+import "./loginCss.js";
+import { Button, Container, Content, ImgContainer } from "./loginCss.js";
 
 const Login = () => {
   return (
